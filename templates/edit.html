@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Edit Profile</title>
+  <style>
+    :root{ --g1:#7c4dff; --g2:#00e5ff; --g3:#ff6ec7; }
+    body{
+      margin:0;font-family:system-ui, Arial, sans-serif;color:#fff;min-height:100vh;
+      display:flex;align-items:center;justify-content:center;padding:24px;
+      background:linear-gradient(135deg,var(--g1),var(--g2),var(--g3));background-size:400% 400%;animation:gm 12s ease infinite;
+    }
+    @keyframes gm{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+    .card{background:rgba(0,0,0,.6);padding:26px;border-radius:16px;width:min(560px,92vw);box-shadow:0 10px 30px rgba(0,0,0,.4);border:1px solid #ffffff22;backdrop-filter: blur(6px)}
+    h1{margin:0 0 10px}
+    form{display:grid;gap:12px;margin-top:10px}
+    label{font-weight:700}
+    input{padding:12px;border-radius:10px;border:1px solid #ffffff33;background:#ffffff10;color:#fff}
+    .row{display:grid;gap:8px}
+    .actions{display:flex;gap:10px;margin-top:6px;flex-wrap:wrap}
+    .btn{padding:12px 18px;border-radius:999px;border:none;font-weight:800;cursor:pointer}
+    .primary{background:#00e5ff;color:#111}
+    .secondary{background:#ffffff22;color:#fff;border:1px solid #ffffff44}
+    a.link{color:#fff;text-decoration:none}
+    .flash{color:#ffcccb;font-weight:700}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>✏️ Edit Profile</h1>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <div class="flash">{{ messages[0] }}</div>
+      {% endif %}
+    {% endwith %}
+
+    <form method="post" action="/profile/edit">
+      <div class="row">
+        <label for="name">Full Name</label>
+        <input type="text" id="name" name="name" value="{{ user['name'] }}" required />
+      </div>
+
+      <div class="row">
+        <label for="nid">National ID (NID)</label>
+        <input type="text" id="nid" name="nid" value="{{ user['nid'] }}" pattern="^[0-9]{10,17}$" title="NID must be 10 to 17 digits" required />
+      </div>
+
+      <div class="row">
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" value="{{ user['phone'] }}" pattern="^01[0-9]{9}$" title="Phone number must start with 01 and be 11 digits" required />
+      </div>
+
+      <div class="row">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" value="{{ user['email'] }}" required />
+      </div>
+
+      <div class="row">
+        <label for="password">New Password (optional)</label>
+        <input type="password" id="password" name="password" minlength="6" placeholder="Leave blank to keep current password" />
+      </div>
+
+      <div class="actions">
+        <button type="submit" class="btn primary">Save Changes</button>
+        <a class="btn secondary" href="/profile">Cancel</a>
+      </div>
+    </form>
+  </div>
+</body>
+</html>

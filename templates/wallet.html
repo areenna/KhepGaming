@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KhepGaming • Wallet</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, Arial, sans-serif;
+      background: linear-gradient(135deg, #7c4dff, #00e5ff, #ff6ec7);
+      background-size: 400% 400%;
+      animation: gradientMove 12s ease infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #fff;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .card {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 30px;
+      border-radius: 16px;
+      width: min(500px, 90%);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+    }
+    .balance {
+      font-size: 36px;
+      font-weight: bold;
+      margin: 20px 0;
+      color: #00e5ff;
+    }
+    .actions {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .btn {
+      padding: 12px 20px;
+      border-radius: 10px;
+      background: #00e5ff;
+      color: #111;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #ff6ec7;
+      color: #fff;
+    }
+    .top-actions {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      display: flex;
+      gap: 10px;
+    }
+    .chip {
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.14);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      border: 1px solid rgba(255,255,255,.25);
+      transition: .25s;
+      backdrop-filter: blur(4px);
+    }
+    .chip:hover { background: rgba(255,255,255,.25); }
+  </style>
+</head>
+<body>
+  
+  <!-- Top-right Home/Profile -->
+  <nav class="top-actions">
+    <a class="chip" href="/">🏠 Home</a>
+    <a class="chip" href="/profile">👤 Profile</a>
+  </nav>
+
+  <main class="card">
+    <h1>👛 Your Wallet</h1>
+    <div class="balance">
+      {{ user['wallet'] }} BDT
+    </div>
+
+    <div class="actions">
+      <!-- Redirects to cashin page -->
+      <a href="/wallet/cashin" class="btn">Cash In</a>
+      <!-- Redirects to cashout page -->
+      <a href="/wallet/cashout" class="btn">Cash Out</a>
+    </div>
+  </main>
+
+</body>
+</html>

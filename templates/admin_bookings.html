@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Admin • Bookings</title>
+<style>
+:root{--g1:#7c4dff;--g2:#00e5ff;--g3:#ff6ec7;--bg:#0f1020;--text:#f9fbff;--border:#ffffff26;--chip:#ffffff18}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,Arial,sans-serif;color:var(--text);
+     background:radial-gradient(circle at 10% 10%,var(--g2),transparent 30%),
+                radial-gradient(circle at 90% 20%,var(--g3),transparent 35%),
+                radial-gradient(circle at 50% 90%,var(--g1),transparent 35%),var(--bg);min-height:100vh}
+nav{position:sticky;top:0;background:#0009;backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--border);padding:12px 18px;display:flex;justify-content:space-between;align-items:center}
+.brand{font-weight:900}
+.links{display:flex;gap:8px;flex-wrap:wrap}
+a.btn{padding:8px 12px;border-radius:999px;text-decoration:none;background:var(--chip);border:1px solid var(--border);color:var(--text);font-weight:700}
+a.btn:hover{background:#ffffff2c}
+main{max-width:1200px;margin:20px auto;padding:0 18px}
+h1{margin:0 0 16px}
+.flash{color:#ffb4b4;font-weight:800;margin-bottom:10px}
+.table-wrap{overflow:auto;border:1px solid var(--border);border-radius:12px;background:#0008}
+table{width:100%;border-collapse:collapse}
+th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+th{background:#1119}
+tr:hover{background:#ffffff10}
+.badge{padding:4px 10px;border-radius:999px;background:#ffffff18;border:1px solid var(--border);font-size:12px}
+.action-form{display:inline}
+.action-form button{padding:6px 10px;border-radius:8px;border:1px solid var(--border);background:#ffffff18;color:#fff;font-weight:700;cursor:pointer}
+.action-form button:hover{background:#ffffff30}
+</style>
+</head>
+<body>
+  <nav>
+    <div class="brand">🎮 Admin • Bookings</div>
+    <div class="links">
+      <a class="btn" href="/admin/home">Home</a>
+      <a class="btn" href="/admin/users">Users</a>
+      <a class="btn" href="/admin/rentals">Rentals</a>
+      <a class="btn" href="/logout">Logout</a>
+    </div>
+  </nav>
+
+  <main>
+    <h1>Confirmed Bookings</h1>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}<div class="flash">{{ messages[0] }}</div>{% endif %}
+    {% endwith %}
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Product</th>
+            <th>Renter</th>
+            <th>Lister</th>
+            <th>Days</th>
+            <th>BDT/day</th>
+            <th>Total</th>
+            <th>Platform 15%</th>
+            <th>Lister 85%</th>
+            <th>Created</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in bookings %}
+          <tr>
+            <td>{{ b.id }}</td>
+            <td><a class="btn" href="/products/{{ b.product_id }}">{{ b.product_title }}</a></td>
+            <td>
+              {{ b.renter_name }}<br>
+              <span class="badge">{{ b.renter_phone }}</span>
+            </td>
+            <td>
+              {{ b.lister_name }}<br>
+              <span class="badge">{{ b.lister_phone }}</span>
+            </td>
+            <td>{{ b.days }}</td>
+            <td>{{ '%.2f'|format(b.price_per_day) }}</td>
+            <td>{{ '%.2f'|format(b.total_amount) }}</td>
+            <td>{{ '%.2f'|format(b.platform_fee) }}</td>
+            <td>{{ '%.2f'|format(b.lister_earnings) }}</td>
+            <td>{{ b.created_at }}</td>
+            <td>
+              <form class="action-form" method="post" action="/admin/bookings/{{ b.id }}/cancel" onsubmit="return confirm('Cancel this booking? Full refund to renter; 85% deducted from lister; 15% deducted from admin. Continue?')">
+                <button type="submit">Cancel</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="11" style="text-align:center;opacity:.8">No confirmed bookings.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </main>
+</body>
+</html>

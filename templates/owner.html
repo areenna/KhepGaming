@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KhepGaming • Owner Profile</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, Arial, sans-serif;
+      background: linear-gradient(135deg, #7c4dff, #00e5ff, #ff6ec7);
+      background-size: 400% 400%;
+      animation: gradientMove 12s ease infinite;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      color: #fff;
+      padding: 20px;
+    }
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .card {
+      background: rgba(0,0,0,0.65);
+      padding: 30px;
+      border-radius: 16px;
+      width: min(500px, 95%);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+    h1 { margin-top: 0; }
+    .info { text-align: left; margin-top: 20px; line-height: 1.6; }
+    .info b { display: inline-block; width: 120px; color: #00e5ff; }
+    .actions { margin-top: 20px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+    a.btn {
+      padding: 10px 16px;
+      border-radius: 10px;
+      background: #00e5ff;
+      color: #111;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    a.btn:hover { background: #ff6ec7; color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>👤 Owner Profile</h1>
+    <div class="info">
+      <div><b>User ID:</b> {{ owner.id }}</div>
+      <div><b>Name:</b> {{ owner.name }}</div>
+      <div><b>Email:</b> {{ owner.email }}</div>
+      <div><b>Phone:</b> {{ owner.phone }}</div>
+      <div><b>NID:</b> {{ owner.nid }}</div>
+      <div><b>Joined:</b> {{ owner.created_at }}</div>
+    </div>
+    <div class="actions">
+      <a href="/dashboard" class="btn">← Back to Dashboard</a>
+    </div>
+  </div>
+</body>
+</html>

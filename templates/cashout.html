@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cash Out</title>
+  <style>
+    body {margin:0;font-family:system-ui,Arial,sans-serif;
+          background:linear-gradient(135deg,#ff6ec7,#7c4dff,#00e5ff);
+          background-size:400% 400%;animation:gradientMove 12s ease infinite;
+          display:flex;align-items:center;justify-content:center;
+          min-height:100vh;color:#fff;}
+    @keyframes gradientMove {
+      0%{background-position:0% 50%}
+      50%{background-position:100% 50%}
+      100%{background-position:0% 50%}
+    }
+    .card{background:rgba(0,0,0,0.6);padding:30px;border-radius:16px;
+          width:min(400px,90%);box-shadow:0 10px 30px rgba(0,0,0,0.4);
+          text-align:center;}
+    h1{margin:0 0 16px;}
+    form{display:grid;gap:14px;}
+    label{text-align:left;font-weight:600;}
+    input{padding:12px;border-radius:10px;border:none;font-size:16px;}
+    button{padding:12px;border:none;border-radius:10px;
+           background:#ff6ec7;color:#111;font-weight:bold;cursor:pointer;}
+    button:hover{background:#00e5ff;color:#fff;}
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🏧 Cash Out</h1>
+    <form method="post" action="/wallet/cashout">
+      <div>
+        <label for="phone">Phone Number</label>
+        <input type="tel" id="phone" name="phone" 
+               pattern="^01[0-9]{9}$" 
+               title="Phone must start with 01 and be 11 digits" 
+               required>
+      </div>
+      <div>
+        <label for="amount">Amount (BDT)</label>
+        <input type="number" id="amount" name="amount" min="1" required>
+      </div>
+      <button type="submit">Cash Out</button>
+    </form>
+  </div>
+</body>
+</html>

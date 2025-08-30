@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>KhepGaming • Rentals Dashboard</title>
+<style>
+:root{
+  --g1:#7c4dff; --g2:#00e5ff; --g3:#ff6ec7;
+  --bg:#0f1020; --text:#f9fbff; --card:#151735;
+  --muted:#cfd6ff; --chip:#ffffff1a; --border:#ffffff26;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif; color:var(--text);
+  background: radial-gradient(circle at 10% 10%, var(--g2), transparent 30%),
+              radial-gradient(circle at 90% 20%, var(--g3), transparent 35%),
+              radial-gradient(circle at 50% 90%, var(--g1), transparent 35%),
+              var(--bg);
+  min-height:100vh;
+}
+
+/* Top Nav */
+nav{ position:sticky; top:0; z-index:10; backdrop-filter: blur(8px);
+     background:linear-gradient(135deg,#00000060,#00000030); border-bottom:1px solid var(--border) }
+.nav-inner{ display:flex; gap:10px; align-items:center; justify-content:space-between; padding:12px 18px; max-width:1200px; margin:0 auto }
+.brand{font-weight:900; letter-spacing:.4px}
+.links{display:flex; gap:10px; flex-wrap:wrap}
+a.btn{ text-decoration:none; color:var(--text); padding:10px 14px; border-radius:999px; background:var(--chip);
+       border:1px solid var(--border); font-weight:700; transition:.2s }
+a.btn:hover{background:#ffffff2c}
+a.btn.primary{background:linear-gradient(90deg,var(--g1),var(--g2),var(--g3)); color:#111; border:0; box-shadow:0 6px 16px #0006}
+
+/* Header / Search / Filters */
+.header{ max-width:1200px; margin:22px auto 8px; padding:0 18px; display:grid; gap:10px }
+.toprow{ display:flex; gap:12px; align-items:center; justify-content:space-between; flex-wrap:wrap }
+.search{ flex:1 1 360px; display:flex; gap:8px }
+.search input{ flex:1; padding:12px 14px; border-radius:12px; border:1px solid var(--border); background:#0f1331aa; color:var(--text); outline:none }
+.search button{ padding:12px 14px; border-radius:12px; border:1px solid var(--border); background:var(--chip); color:var(--text); font-weight:700; cursor:pointer }
+.filters-row{ display:flex; gap:8px; flex-wrap:wrap }
+.chip{ padding:8px 12px; border-radius:999px; background:var(--chip); border:1px solid var(--border); font-weight:600; cursor:pointer }
+.chip.active{ outline:2px solid var(--g2) }
+
+/* Advanced panel */
+.adv{ background:#0b0f2a99; border:1px solid var(--border); border-radius:16px; padding:12px; display:none }
+.adv.show{ display:block }
+.adv form{ display:grid; gap:10px }
+.grid2{ display:grid; gap:10px; grid-template-columns:repeat(2,1fr) }
+.grid3{ display:grid; gap:10px; grid-template-columns:repeat(3,1fr) }
+@media (max-width:900px){ .grid2, .grid3{ grid-template-columns:1fr } }
+.adv input, .adv select{
+  padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:#0f1331aa; color:#fff
+}
+.adv .actions{ display:flex; gap:8px; justify-content:flex-end }
+.adv .actions button, .adv .actions a{ padding:10px 14px; border-radius:12px; border:1px solid var(--border); background:#ffffff18; color:#fff; font-weight:800; text-decoration:none }
+.adv .actions button.primary{ background:linear-gradient(90deg,var(--g1),var(--g2),var(--g3)); color:#111; border:0 }
+
+/* Grid */
+.grid{
+  max-width:1200px; margin:10px auto 40px; padding:0 18px;
+  display:grid; grid-template-columns: repeat( auto-fill, minmax(240px,1fr) ); gap:16px;
+}
+.card{ background:linear-gradient(180deg,#ffffff12,#ffffff08); border:1px solid var(--border); border-radius:16px; overflow:hidden;
+       box-shadow:0 10px 24px #0005; display:flex; flex-direction:column; min-height:100% }
+.thumb{ aspect-ratio: 4/3; width:100%; object-fit:cover; background:#0b0d22; display:block }
+.body{ padding:12px 12px 14px; display:grid; gap:8px }
+.title{ font-weight:800; line-height:1.2; margin:0 }
+.meta{ display:flex; align-items:center; gap:8px; color:var(--muted); font-size:14px; flex-wrap:wrap }
+.price{ font-weight:900 }
+.rating{ display:flex; align-items:center; gap:4px }
+.star{ font-size:16px; filter:drop-shadow(0 1px 2px #0006) }
+.star.off{ opacity:.35 }
+.loc{ margin-left:auto; opacity:.9 }
+.actions{ margin-top:auto; padding:0 12px 12px }
+a.more{ display:block; text-align:center; padding:10px 14px; border-radius:12px; text-decoration:none;
+        font-weight:800; background:#ffffff16; border:1px solid var(--border); color:var(--text) }
+a.more:hover{ background:#ffffff28 }
+</style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <div class="brand">🎮 KhepGaming • Rentals</div>
+      <div class="links">
+        <a class="btn" href="/">Home</a>
+        <a class="btn" href="/dashboard">Dashboard</a>
+        <a class="btn" href="/wallet">Wallet</a>
+        <a class="btn" href="/profile">Profile</a>
+        <a class="btn" href="/admin/login">Admin</a>
+        <a class="btn primary" href="/rent/new">＋ Rent out</a>
+      </div>
+    </div>
+  </nav>
+
+  <header class="header">
+    <div class="toprow">
+      <form class="search" method="get" action="/dashboard">
+        <input type="text" name="q" value="{{ request.args.get('q','') if request else '' }}" placeholder="Search consoles, GPUs, games…">
+        <button type="submit">Search</button>
+      </form>
+
+      <div class="filters-row">
+        {# Quick category chips set ?category=... and submit #}
+        {% set cat = request.args.get('category','') if request else '' %}
+        <a class="chip {{ 'active' if cat=='' else '' }}" href="/dashboard">All</a>
+        <a class="chip {{ 'active' if cat=='Consoles' else '' }}" href="/dashboard?category=Consoles">Consoles</a>
+        <a class="chip {{ 'active' if cat=='PC/GPU' else '' }}" href="/dashboard?category=PC/GPU">PC / GPU</a>
+        <a class="chip {{ 'active' if cat=='VR' else '' }}" href="/dashboard?category=VR">VR</a>
+        <a class="chip {{ 'active' if cat=='Accessories' else '' }}" href="/dashboard?category=Accessories">Accessories</a>
+
+        <a class="btn" id="toggleAdv" href="#" onclick="document.getElementById('adv').classList.toggle('show');return false;">⚙️ Advanced</a>
+      </div>
+    </div>
+
+    <!-- Advanced Filters -->
+    <div id="adv" class="adv {% if request.args.get('price_min') or request.args.get('price_max') or request.args.get('location') or request.args.get('from') or request.args.get('to') or request.args.get('rating_min') or request.args.get('category') %}show{% endif %}">
+      <form method="get" action="/dashboard">
+        <div class="grid3">
+          <div>
+            <label>Category</label>
+            <select name="category">
+              <option value="" {{ 'selected' if request.args.get('category','')=='' }}>All</option>
+              <option value="Consoles" {{ 'selected' if request.args.get('category')=='Consoles' }}>Consoles</option>
+              <option value="PC/GPU" {{ 'selected' if request.args.get('category')=='PC/GPU' }}>PC / GPU</option>
+              <option value="VR" {{ 'selected' if request.args.get('category')=='VR' }}>VR</option>
+              <option value="Accessories" {{ 'selected' if request.args.get('category')=='Accessories' }}>Accessories</option>
+            </select>
+          </div>
+          <div>
+            <label>Location</label>
+            <input type="text" name="location" value="{{ request.args.get('location','') }}">
+          </div>
+          <div>
+            <label>Min rating</label>
+            <select name="rating_min">
+              {% set rm = request.args.get('rating_min','') %}
+              <option value="" {{ 'selected' if rm=='' }}>Any</option>
+              <option value="1" {{ 'selected' if rm=='1' }}>1+</option>
+              <option value="2" {{ 'selected' if rm=='2' }}>2+</option>
+              <option value="3" {{ 'selected' if rm=='3' }}>3+</option>
+              <option value="4" {{ 'selected' if rm=='4' }}>4+</option>
+              <option value="5" {{ 'selected' if rm=='5' }}>5</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid3">
+          <div>
+            <label>Price min (BDT)</label>
+            <input type="number" name="price_min" step="0.01" min="0" value="{{ request.args.get('price_min','') }}">
+          </div>
+          <div>
+            <label>Price max (BDT)</label>
+            <input type="number" name="price_max" step="0.01" min="0" value="{{ request.args.get('price_max','') }}">
+          </div>
+          <div>
+            <label>Status</label>
+            <select name="status">
+              {% set st = request.args.get('status','available') %}
+              <option value="" {{ 'selected' if st=='' }}>Any</option>
+              <option value="available" {{ 'selected' if st=='available' }}>Available</option>
+              <option value="rented" {{ 'selected' if st=='rented' }}>Rented</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div>
+            <label>Available from</label>
+            <input type="date" name="from" value="{{ request.args.get('from','') }}">
+          </div>
+          <div>
+            <label>Available to</label>
+            <input type="date" name="to" value="{{ request.args.get('to','') }}">
+          </div>
+        </div>
+
+        <div class="actions">
+          <a href="/dashboard">Clear</a>
+          <button type="submit" class="primary">Apply filters</button>
+        </div>
+      </form>
+    </div>
+  </header>
+
+  <main class="grid">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}<div style="grid-column:1/-1;margin:0 0 12px;color:#ffb4b4;font-weight:800">{{ messages[0] }}</div>{% endif %}
+    {% endwith %}
+
+    {% for p in products %}
+      <article class="card">
+        <img class="thumb"
+             src="{{ p.image_url or '/static/no-image.png' }}"
+             alt="{{ p.title }} image" loading="lazy"
+             onerror="this.src='https://via.placeholder.com/640x480?text=No+Image';"/>
+        <div class="body">
+          <h3 class="title">{{ p.title }}</h3>
+
+          <div class="meta">
+            <span class="price">{{ p.price_per_day }} BDT/day</span>
+
+            <span class="rating" aria-label="Average rating {{ '%.1f'|format(p.avg_rating or 0) }} out of 5">
+              {% set r = (p.avg_rating or 0)|round(0, 'floor') %}
+              {% for i in range(5) %}
+                {% if i < r %}<span class="star">★</span>{% else %}<span class="star off">★</span>{% endif %}
+              {% endfor %}
+              <small>({{ '%.1f'|format(p.avg_rating or 0) }})</small>
+            </span>
+
+            <span class="loc">📍 {{ p.location }}</span>
+          </div>
+
+          <div class="meta"><span>🗓️ {{ p.available_summary }}</span></div>
+        </div>
+
+        <div class="actions">
+          <a class="more" href="/products/{{ p.id }}">View details</a>
+        </div>
+      </article>
+    {% else %}
+      <p style="grid-column:1/-1;opacity:.9">No products found. Try adjusting filters or <a href="/rent/new" style="color:#fff;font-weight:800">rent out</a> something!</p>
+    {% endfor %}
+  </main>
+</body>
+</html>

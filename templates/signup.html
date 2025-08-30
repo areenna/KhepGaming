@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Sign Up</title>
+<style>
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;background:linear-gradient(135deg,#ff9a9e 0%,#fad0c4 99%,#fad0c4 100%);min-height:100vh;display:grid;place-items:center}
+.card{width:min(520px,94vw);background:#ffffffdd;border-radius:16px;padding:26px;border:1px solid #00000010;box-shadow:0 14px 30px #0003}
+h1{margin:0 0 10px}
+form{display:grid;gap:12px;margin-top:10px}
+label{font-weight:600}
+input{padding:12px;border-radius:10px;border:1px solid #0002;font-size:16px}
+.row{display:grid;gap:10px}
+button{padding:12px;border:none;border-radius:999px;background:#7c4dff;color:#fff;font-weight:700;cursor:pointer}
+.alt{margin-top:10px}
+a{color:#7c4dff}
+.flash{color:#b00020;font-weight:600}
+</style>
+</head>
+<body>
+<div class="card">
+<h1>Sign Up</h1>
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash">{{ messages[0] }}</div>
+{% endif %}
+{% endwith %}
+<form method="post" action="/signup">
+  
+  <div class="row">
+    <label for="name">Full Name</label>
+    <input type="text" id="name" name="name" required />
+  </div>
+
+  <div class="row">
+    <label for="nid">National ID (NID)</label>
+    <input type="text" id="nid" name="nid" pattern="^[0-9]{10,17}$" 
+           title="NID must be 10 to 17 digits" required />
+  </div>
+
+  <div class="row">
+    <label for="phone">Phone Number</label>
+    <input type="tel" id="phone" name="phone" pattern="^01[0-9]{9}$" 
+           title="Phone number must start with 01 and be 11 digits" required />
+  </div>
+
+  <div class="row">
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" required />
+  </div>
+
+  <div class="row">
+    <label for="password">Password</label>
+    <input type="password" id="password" name="password" minlength="6" required />
+  </div>
+
+  <button type="submit">Create Account</button>
+</form>
+
+<p class="alt">Already have an account? <a href="/login">Log in</a>.</p>
+</div>
+</body>
+</html>

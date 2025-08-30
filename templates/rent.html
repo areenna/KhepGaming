@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Rent • {{ product.title }}</title>
+<style>
+  :root{--g1:#7c4dff;--g2:#00e5ff;--g3:#ff6ec7;--border:#ffffff26;--text:#f9fbff}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,Arial,sans-serif;color:var(--text);
+       background:radial-gradient(circle at 10% 10%,var(--g2),transparent 30%),
+                  radial-gradient(circle at 90% 20%,var(--g3),transparent 35%),
+                  radial-gradient(circle at 50% 90%,var(--g1),transparent 35%),#0f1020;
+       min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+  .card{width:min(800px,95vw);background:#0009;border:1px solid var(--border);border-radius:16px;box-shadow:0 10px 24px #0005;overflow:hidden}
+  .row{display:grid;gap:8px}
+  .wrap{display:grid;grid-template-columns:1.2fr 1fr}
+  @media (max-width:900px){.wrap{grid-template-columns:1fr}}
+  .img{background:#0b0d22}
+  .img img{width:100%;display:block;aspect-ratio:4/3;object-fit:cover}
+  .side{padding:16px;display:grid;gap:12px}
+  h1{margin:0;font-size:22px}
+  .badge{padding:6px 10px;border-radius:999px;background:#ffffff18;border:1px solid var(--border);font-weight:700;display:inline-block}
+  input{padding:10px 12px;border-radius:12px;border:1px solid var(--border);background:#1116;color:#fff}
+  .actions{display:flex;gap:10px;flex-wrap:wrap}
+  button,a.btn{padding:12px 16px;border-radius:12px;border:1px solid var(--border);background:#ffffff18;color:#fff;font-weight:800;text-decoration:none;cursor:pointer}
+  .primary{background:linear-gradient(90deg,var(--g1),var(--g2),var(--g3));color:#111;border:0;box-shadow:0 6px 16px #0006}
+  .muted{opacity:.9}
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="wrap">
+      <div class="img">
+        <img src="{{ product.image_url or '/static/no-image.png' }}"
+             alt="{{ product.title }}"
+             onerror="this.src='https://via.placeholder.com/960x720?text=No+Image';">
+      </div>
+      <div class="side">
+        <h1>{{ product.title }}</h1>
+        <div class="row muted">
+          <span class="badge">📍 {{ product.location }}</span>
+          <span class="badge">🗓️ {{ product.available_from }} → {{ product.available_to }}</span>
+          <span class="badge">💸 {{ product.price_per_day }} BDT/day</span>
+        </div>
+
+        <form id="rentForm" method="post" action="/rent/{{ product.id }}/confirm">
+          <div class="row">
+            <label for="days">How many days?</label>
+            <input id="days" name="days" type="number"
+                   min="{{ min_days }}" max="{{ max_days }}" value="{{ min_days }}" required>
+            <small class="muted">Max allowed: {{ max_days }} day(s)</small>
+          </div>
+
+          <div class="row">
+            <label>Total</label>
+            <input id="total" type="text" value="" readonly>
+            <small class="muted">15% platform fee is included in your payment split on confirmation.</small>
+          </div>
+
+          <div class="actions">
+            <a class="btn" href="/products/{{ product.id }}">Back</a>
+            <button class="primary" type="submit" onclick="return confirm('Are you sure you want to rent this item?')">
+              Confirm rental
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<script>
+  const pricePerDay = parseFloat('{{ product.price_per_day }}');
+  const daysEl = document.getElementById('days');
+  const totalEl = document.getElementById('total');
+
+  function recalc(){
+    const d = Math.max(parseInt(daysEl.value||'1',10), 1);
+    const total = (pricePerDay * d).toFixed(2);
+    totalEl.value = total + ' BDT';
+  }
+  daysEl.addEventListener('input', recalc);
+  recalc();
+</script>
+</body>
+</html>

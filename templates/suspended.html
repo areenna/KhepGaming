@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Account Suspended</title>
+<style>
+  body{margin:0;font-family:system-ui,Arial,sans-serif;background:linear-gradient(135deg,#ff6ec7,#7c4dff,#00e5ff);
+       background-size:400% 400%;animation:gm 12s ease infinite;
+       min-height:100vh;display:flex;align-items:center;justify-content:center;color:#fff;padding:20px;text-align:center}
+  @keyframes gm{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+  .card{background:rgba(0,0,0,.65);border:1px solid #ffffff33;border-radius:16px;
+        box-shadow:0 10px 30px rgba(0,0,0,0.4);width:min(520px,95%);padding:24px}
+  h1{margin:0 0 10px}
+  p{opacity:.9;line-height:1.6}
+  a.btn{display:inline-block;margin-top:16px;padding:12px 18px;border-radius:12px;
+        background:#00e5ff;color:#111;text-decoration:none;font-weight:800}
+  a.btn:hover{background:#ff6ec7;color:#fff}
+</style>
+</head>
+<body>
+  <div class="card">
+    <h1>⚠️ Account Suspended</h1>
+    <p>Your account has been suspended by the admin.<br>
+       You cannot use any features of the platform until reactivated.</p>
+    <a class="btn" href="/logout">Log Out</a>
+  </div>
+</body>
+</html>

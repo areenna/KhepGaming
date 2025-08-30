@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>My Booked Rentals</title>
+<style>
+  :root{--border:#ffffff26;--text:#f9fbff}
+  body{margin:0;font-family:system-ui,Arial,sans-serif;color:var(--text);
+       background:radial-gradient(circle at 10% 10%,#00e5ff,transparent 30%),
+                  radial-gradient(circle at 90% 20%,#ff6ec7,transparent 35%),
+                  radial-gradient(circle at 50% 90%,#7c4dff,transparent 35%),#0f1020;min-height:100vh}
+  .wrap{max-width:1100px;margin:22px auto;padding:0 16px}
+  .card{background:#0009;border:1px solid var(--border);border-radius:16px;box-shadow:0 10px 24px #0005;padding:16px}
+  .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  input[type="text"]{padding:10px;border-radius:12px;border:1px solid var(--border);background:#1116;color:#fff;flex:1}
+  button,a.btn{padding:10px 14px;border-radius:12px;border:1px solid var(--border);background:#ffffff18;color:#fff;font-weight:800;text-decoration:none}
+  a.btn.danger,button.danger{background:#ff6e6e33;border-color:#ff6e6e77}
+  table{width:100%;border-collapse:collapse;margin-top:12px}
+  th,td{padding:10px;border-bottom:1px solid var(--border);text-align:left}
+  th{opacity:.9}
+  .muted{opacity:.85}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="row">
+      <a class="btn" href="/profile">← Back to profile</a>
+      <form class="row" method="get" action="/me/booked" style="flex:1">
+        <input type="text" name="q" value="{{ q or '' }}" placeholder="Search by product title or booking id…">
+        <button type="submit">Search</button>
+      </form>
+    </div>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}<div style="margin-top:8px;color:#ffb4b4;font-weight:800">{{ messages[0] }}</div>{% endif %}
+    {% endwith %}
+
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th><th>Product</th><th>Days</th><th>Total</th><th>Status</th><th>Created</th><th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for b in bookings %}
+        <tr>
+          <td>{{ b.id }}</td>
+          <td><a class="btn" href="/products/{{ b.product_id }}">View</a> {{ b.product_title }}</td>
+          <td>{{ b.days }}</td>
+          <td>{{ "{:,.2f}".format(b.total_amount) }}</td>
+          <td>{{ b.status }}</td>
+          <td class="muted">{{ b.created_at }}</td>
+          <td>
+            {% if b.status != 'cancelled' %}
+            <form method="post" action="/me/bookings/{{ b.id }}/cancel" style="display:inline">
+              <button type="submit" class="danger" onclick="return confirm('Cancel this booking? You will get 50% refund.')">Cancel</button>
+            </form>
+            {% else %}
+              <span class="muted">—</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr><td colspan="7" class="muted">No bookings found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

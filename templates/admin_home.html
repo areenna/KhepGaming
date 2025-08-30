@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KhepGaming • Admin Dashboard</title>
+<style>
+  :root{--g1:#7c4dff;--g2:#00e5ff;--g3:#ff6ec7;--border:#ffffff26;--chip:#ffffff18;--text:#f9fbff}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:system-ui,Arial,sans-serif;color:var(--text);
+       background:radial-gradient(circle at 10% 10%,var(--g2),transparent 30%),
+                  radial-gradient(circle at 90% 20%,var(--g3),transparent 35%),
+                  radial-gradient(circle at 50% 90%,var(--g1),transparent 35%),#0f1020;min-height:100vh}
+  nav{position:sticky;top:0;backdrop-filter:blur(8px);background:#0008;border-bottom:1px solid var(--border)}
+  .nav-inner{max-width:1100px;margin:0 auto;padding:12px 16px;display:flex;justify-content:space-between;align-items:center}
+  .brand{font-weight:900}
+  .links{display:flex;gap:10px;flex-wrap:wrap}
+  a.btn{padding:10px 14px;border-radius:999px;text-decoration:none;color:var(--text);background:var(--chip);border:1px solid var(--border);font-weight:800}
+  a.btn.primary{background:linear-gradient(90deg,var(--g1),var(--g2),var(--g3));color:#111;border:0;box-shadow:0 6px 16px #0006}
+  main{max-width:1100px;margin:22px auto;padding:0 16px;display:grid;gap:16px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+  .card{background:#0009;border:1px solid var(--border);border-radius:16px;box-shadow:0 10px 24px #0005;padding:18px}
+  h1{margin:0 0 6px}
+  .kv{display:grid;gap:8px}
+  .row{display:flex;gap:10px;flex-wrap:wrap}
+  .pill{padding:8px 12px;border-radius:999px;background:var(--chip);border:1px solid var(--border);font-weight:800}
+  .actions{display:flex;gap:10px;flex-wrap:wrap}
+</style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <div class="brand">🛡️ KhepGaming • Admin</div>
+      <div class="links">
+        <a class="btn" href="/">Home</a>
+        <a class="btn" href="/dashboard">User Dashboard</a>
+        <a class="btn" href="/admin/logout">Log out</a>
+      </div>
+    </div>
+  </nav>
+
+  <main>
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}<div class="card" style="border-color:#ffb4b4">{{ messages[0] }}</div>{% endif %}
+    {% endwith %}
+
+    <div class="grid">
+      <section class="card">
+        <h1>Admin Info</h1>
+        <div class="kv">
+          <div class="row"><span class="pill">ID: {{ admin.id }}</span><span class="pill">Joined: {{ admin.created_at }}</span></div>
+          <div class="row"><span class="pill">Name: {{ admin.name }}</span><span class="pill">Phone: {{ admin.phone }}</span></div>
+          <div class="row"><span class="pill">Email: {{ admin.email }}</span></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h1>Platform Wallet</h1>
+        <p style="font-size:28px;font-weight:900;margin:8px 0 0">{{ "{:,.2f}".format(admin_wallet.balance if admin_wallet and admin_wallet.balance is not none else 0) }} BDT</p>
+        <p style="opacity:.9;margin:6px 0">Shared wallet (15% fee from each rental)</p>
+      </section>
+    </div>
+
+    <section class="card">
+      <h1>Manage</h1>
+      <div class="actions">
+        <a class="btn primary" href="/admin/users">Users</a>
+        <a class="btn primary" href="/admin/bookings">Bookings</a>
+        <a class="btn primary" href="/admin/rentals">Rentals</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
