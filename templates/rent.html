@@ -31,9 +31,11 @@
   <div class="card">
     <div class="wrap">
       <div class="img">
-        <img src="{{ product.image_url or '/static/no-image.png' }}"
-             alt="{{ product.title }}"
-             onerror="this.src='https://via.placeholder.com/960x720?text=No+Image';">
+        <img src="{{ url_for('static', filename=product.image_path) }}"
+          alt="{{ product.name }}"
+          style="max-width: 100%; height: auto;"
+        >
+
       </div>
       <div class="side">
         <h1>{{ product.title }}</h1>

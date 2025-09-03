@@ -73,7 +73,11 @@ h1{margin:0;font-size:28px}
     <div class="actions">
       <a class="btn" href="/dashboard">← Back to dashboard</a>
 
-      {% if product.status == 'available' %}
+      {% set is_owner = (session.get('user_id') == product.owner_id) %}
+
+      {% if is_owner %}
+        <a class="btn primary" style="pointer-events:none;opacity:.5;cursor:not-allowed;">Your item</a>
+      {% elif product.status == 'available' %}
         <a class="btn primary" href="/rent/{{ product.id }}/request">Rent this item</a>
       {% else %}
         <a class="btn primary" style="pointer-events:none;opacity:.5;cursor:not-allowed;">Not Available</a>

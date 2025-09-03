@@ -76,8 +76,8 @@ a.button.secondary{
 </head>
 <body>
   <!-- Admin buttons -->
-  <a href="{{ url_for('admin_signup_page') }}" class="admin-btn admin-left">🛡️ Admin Sign Up</a>
-  <a href="{{ url_for('admin_login_page') }}" class="admin-btn admin-right">🔐 Admin Login</a>
+  <a href="{{ url_for('main.admin_signup_page') }}" class="admin-btn admin-left">🛡️ Admin Sign Up</a>
+  <a href="{{ url_for('main.admin_login_page') }}" class="admin-btn admin-right">🔐 Admin Login</a>
 
   <main class="card">
     <h1>🎮 Welcome to KhepGaming</h1>
@@ -85,8 +85,8 @@ a.button.secondary{
 
     <div class="cta">
       <!-- User buttons -->
-      <a class="button" href="{{ url_for('signup') }}">Create Account</a>
-      <a class="button secondary" href="{{ url_for('login') }}">I already have an account</a>
+      <a class="button" href="{{ url_for('main.signup') }}">Create Account</a>
+      <a class="button secondary" href="{{ url_for('main.login') }}">I already have an account</a>
     </div>
   </main>
 </body>

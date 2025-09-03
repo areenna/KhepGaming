@@ -189,10 +189,12 @@ a.more:hover{ background:#ffffff28 }
 
     {% for p in products %}
       <article class="card">
-        <img class="thumb"
-             src="{{ p.image_url or '/static/no-image.png' }}"
-             alt="{{ p.title }} image" loading="lazy"
-             onerror="this.src='https://via.placeholder.com/640x480?text=No+Image';"/>
+      <img class=thumb
+        src="{{ url_for('static', filename=products.image_path) }}"
+        alt="{{ products.name }}"
+        style="max-width: 100%; height: auto;"
+      >
+
         <div class="body">
           <h3 class="title">{{ p.title }}</h3>
 
